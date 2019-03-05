@@ -3,7 +3,7 @@ use openssl::pkey::Private;
 use openssl::hash::{hash_xof, MessageDigest};
 use crate::{device::Device};
 
-const RSA_LENGTH: u32 = 2048;
+const RSA_LENGTH: u32 = 4096;
 
 pub struct Terminal {
     device: Device,
