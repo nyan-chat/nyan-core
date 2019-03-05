@@ -1,0 +1,12 @@
+[package]
+name = "nyan-core"
+version = "0.1.0"
+authors = ["Delton Ding <dsh0416@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "nyan"
+crate-type = ["rlib", "cdylib", "staticlib"]
+
+[dependencies]
+openssl = { version = "0.10", features = ["vendored"] }
