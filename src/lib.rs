@@ -1,3 +1,3 @@
-pub extern "C" fn print_hello_from_rust() {
-    println!("Hello from Rust");
+pub extern "C" fn version() -> &'static str {
+    "0.1.0"
 }
