@@ -3,7 +3,7 @@ extern crate nyan;
 #[test]
 fn test_termianl_generate() {
     let terminal = nyan::terminal::Terminal::generate("hello".to_string());
-    assert_eq!(terminal.key_bits(), 4096);
+    assert_eq!(terminal.key_bits(), nyan::consts::Consts::RSA_LENGTH);
 }
 
 #[test]

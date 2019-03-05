@@ -1,6 +1,7 @@
 use openssl::rsa::{Padding, Rsa};
 use openssl::pkey::Public;
 use openssl::hash::{hash_xof, MessageDigest};
+use crate::{consts::Consts};
 
 pub struct Device {
     name: String,
@@ -24,7 +25,7 @@ impl Device {
     pub fn decrypt_key(&self, encrypted_key: &Vec<u8>) -> Vec<u8> {
         let mut buf = vec![0; self.pubkey.size() as usize];
         self.pubkey.public_decrypt(&encrypted_key, &mut buf, Padding::PKCS1).unwrap();
-        buf[..32].to_vec()
+        buf[..Consts::AES_KEY_SIZE].to_vec()
     }
 
     pub fn validate(&self, msg: &Vec<u8>, signature: &Vec<u8>) -> bool {

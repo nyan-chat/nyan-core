@@ -1,9 +1,7 @@
 use openssl::rsa::{Padding, Rsa};
 use openssl::pkey::Private;
 use openssl::hash::{hash_xof, MessageDigest};
-use crate::{device::Device};
-
-const RSA_LENGTH: u32 = 4096;
+use crate::{device::Device, consts::Consts};
 
 pub struct Terminal {
     device: Device,
@@ -12,7 +10,7 @@ pub struct Terminal {
 
 impl Terminal {
     pub fn generate(name: String) -> Terminal {
-        let key_pair = Rsa::generate(RSA_LENGTH).unwrap();
+        let key_pair = Rsa::generate(Consts::RSA_LENGTH).unwrap();
         let pubkey = Rsa::public_key_from_der(&key_pair.public_key_to_der().unwrap()).unwrap();
         let privkey = key_pair;
         let device = Device::new(name, pubkey);
@@ -20,7 +18,7 @@ impl Terminal {
     }
 
     pub fn key_bits(&self) -> u32 {
-        RSA_LENGTH
+        Consts::RSA_LENGTH
     }
 
     pub fn get_device(&self) -> &Device {
@@ -36,7 +34,7 @@ impl Terminal {
     }
 
     pub fn encrypt_key(&self, key: &Vec<u8>) -> Vec<u8> {
-        if key.len() != 32 {
+        if key.len() != Consts::AES_KEY_SIZE {
             panic!("Incorrenct chacha20-ietf-poly1305 key size")
         }
         let mut buf = vec![0; self.privkey.size() as usize];
