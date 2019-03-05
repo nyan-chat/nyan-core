@@ -1,7 +1,7 @@
 use openssl::rsa::{Padding, Rsa};
 use openssl::pkey::Public;
 use openssl::hash::{hash_xof, MessageDigest};
-use crate::{consts::Consts};
+use crate::{consts::Consts, errors::Errors};
 
 pub struct Device {
     name: String,
@@ -13,9 +13,12 @@ impl Device {
         Device { name: name, pubkey: pubkey }
     }
 
-    pub fn import_from_der(name: String, pubkey: Vec<u8>) -> Device {
-        // TODO: Import may fail, add error information if possible
-        Device { name: name, pubkey: Rsa::public_key_from_der(&pubkey).unwrap() }
+    pub fn import_from_der(name: String, pubkey: Vec<u8>) -> Result<Device, Errors> {
+        let rsa = Rsa::public_key_from_der(&pubkey);
+        match rsa {
+            Ok(val) => Ok(Device { name: name, pubkey: val }),
+            Err(_) => Err(Errors { val: -1, reason: "Failed To Parse the Public Key" }),
+        }
     }
 
     pub fn info(&self) -> &String {

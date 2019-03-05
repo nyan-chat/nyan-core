@@ -1,7 +1,8 @@
+pub mod chat;
 pub mod consts;
 pub mod device;
+pub mod errors;
 pub mod group;
-pub mod operator;
 pub mod terminal;
 pub mod user;
 
