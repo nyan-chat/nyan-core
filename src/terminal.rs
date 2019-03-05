@@ -23,6 +23,10 @@ impl Terminal {
         RSA_LENGTH
     }
 
+    pub fn get_device(&self) -> &Device {
+        &self.device
+    }
+
     pub fn export_public_key(&self) -> Vec<u8> {
         self.privkey.public_key_to_der().unwrap()
     }
@@ -31,12 +35,13 @@ impl Terminal {
         self.privkey.private_key_to_der().unwrap()
     }
 
-    pub fn encrypt_key(&self) {
-
-    }
-
-    pub fn decrypt_key(&self) {
-
+    pub fn encrypt_key(&self, key: &Vec<u8>) -> Vec<u8> {
+        if key.len() != 32 {
+            panic!("Incorrenct chacha20-ietf-poly1305 key size")
+        }
+        let mut buf = vec![0; self.privkey.size() as usize];
+        self.privkey.private_encrypt(&key, &mut buf, Padding::PKCS1).unwrap();
+        buf
     }
 
     pub fn sign(&self, msg: &Vec<u8>) -> Vec<u8> {

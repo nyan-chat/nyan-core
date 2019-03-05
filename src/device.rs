@@ -21,6 +21,12 @@ impl Device {
         &self.name
     }
 
+    pub fn decrypt_key(&self, encrypted_key: &Vec<u8>) -> Vec<u8> {
+        let mut buf = vec![0; self.pubkey.size() as usize];
+        self.pubkey.public_decrypt(&encrypted_key, &mut buf, Padding::PKCS1).unwrap();
+        buf[..32].to_vec()
+    }
+
     pub fn validate(&self, msg: &Vec<u8>, signature: &Vec<u8>) -> bool {
         let mut hashed = vec![0; self.pubkey.size() as usize];
         hash_xof(MessageDigest::shake_256(), msg, hashed.as_mut_slice()).unwrap();
