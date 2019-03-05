@@ -25,10 +25,12 @@ impl Device {
         &self.name
     }
 
-    pub fn decrypt_key(&self, encrypted_key: &Vec<u8>) -> Vec<u8> {
+    pub fn decrypt_key(&self, encrypted_key: &Vec<u8>) -> Result<Vec<u8>, Errors> {
         let mut buf = vec![0; self.pubkey.size() as usize];
-        self.pubkey.public_decrypt(&encrypted_key, &mut buf, Padding::PKCS1).unwrap();
-        buf[..Consts::AES_KEY_SIZE].to_vec()
+        match self.pubkey.public_decrypt(&encrypted_key, &mut buf, Padding::PKCS1) {
+            Ok(_) => Ok(buf[..Consts::AES_KEY_SIZE].to_vec()),
+            Err(_) => Err(Errors { val: -1, reason: "Failed to Decrypt with Public Key"}),
+        }
     }
 
     pub fn validate(&self, msg: &Vec<u8>, signature: &Vec<u8>) -> bool {

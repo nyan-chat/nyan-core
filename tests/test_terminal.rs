@@ -29,5 +29,5 @@ fn test_termianl_encrypt_key() {
     let key = b"\x42\xF4\x97\xE0\x42\xF4\x97\xE0\x42\xF4\x97\xE0\x42\xF4\x97\xE0\x42\xF4\x97\xE0\x42\xF4\x97\xE0\x42\xF4\x97\xE0\x42\xF4\x97\xE0".to_vec();
     let encrypted = terminal.encrypt_key(&key);
     let device = nyan::device::Device::import_from_der("hello".to_string(), terminal.export_public_key()).unwrap();
-    assert_eq!(device.decrypt_key(&encrypted), key)
+    assert_eq!(device.decrypt_key(&encrypted).unwrap(), key)
 }
